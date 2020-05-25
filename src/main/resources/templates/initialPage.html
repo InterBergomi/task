@@ -1,0 +1,173 @@
+<!doctype html>
+
+<!--注意：引入thymeleaf的名称空间-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bulma/0.8.2/css/bulma.min.css" rel="stylesheet">
+    <style>
+        body{
+            padding: 20px;
+        }
+        #main{
+            margin-top: 40px;
+        }
+        .table{
+            margin: 0 auto;
+        }
+        label{
+            height: 40px;
+            display: inline-block;
+            line-height: 40px;
+            margin-left: 20px;
+        }
+        .button{
+            vertical-align: middle;
+        }
+        #queryBtn{
+            margin-left: 20px;
+        }
+    </style>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="title">
+    <div class="container">
+    <label for="gradeSelect">请选择年级:</label>
+    <div class="select is-rounded">
+        <select id="gradeSelect" class="select-label">
+            <option value="">全部</option>
+            <option th:each="grade:${gradeList}"
+                    th:value="${grade.gradeCode}"
+                    th:text="${grade.gradeName}">
+            </option>
+        </select>
+    </div>
+
+    <label for="subjectSelect">请选择科目:</label>
+    <div class="select is-rounded">
+        <select id="subjectSelect" class="select-label">
+            <option value="">全部</option>
+            <option th:each="subject:${subjectList}"
+                    th:value="${subject.subjectCode}"
+                    th:text="${subject.subjectName}">
+            </option>
+        </select>
+    </div>
+
+    <label for="lessonStartDateSelect">请选择开始时间:</label>
+    <div class="select is-rounded">
+        <select id="lessonStartDateSelect" class="select-label">
+            <option th:each="lessonStartDate:${lessonStartDateList}"
+                    th:value="${lessonStartDate}"
+                    th:text="${lessonStartDate}">
+            </option>
+        </select>
+    </div>
+        <button id="resetStart" type="submit"  class="button is-primary is-small">重置开始时间</button>
+    <label for="lessonEndDateSelect">请选择结束时间:</label>
+    <div class="select is-rounded">
+
+        <select id="lessonEndDateSelect" class="select-label">
+            <option th:each="lessonEndDate:${lessonEndDateList}"
+                    th:value="${lessonEndDate}"
+                    th:text="${lessonEndDate}">
+            </option>
+        </select>
+    </div>
+        <button id="resetEnd" type="submit"  class="button is-primary is-small">重置结束时间</button>
+    <button id="queryBtn" type="submit"  class="button is-info">查询</button>
+    </div>
+</div>
+    <div id="main">
+      <h2 class="title is-2 has-text-centered">学科课程数量</h2>
+        <table class="table is-bordered">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>科目id</th>
+                    <th>科目编码</th>
+                    <th>科目名称</th>
+                    <th>课程数量</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${resultList.size()} gt 0" th:each="vo : ${resultList}">
+                    <td th:text="${vo.sequence}"></td>
+                    <td th:text="${vo.subjectId}"></td>
+                    <td class="subjectCode" th:text="${vo.subjectCode}"></td>
+                    <td th:text="${vo.subjectName}"></td>
+                    <!--<td th:text="${vo.lessonQuantity}"></td>-->
+                    <td>
+                        <a class="detailBtn" th:text="${vo.lessonQuantity}"/>
+                    </td>
+                </tr>
+            <tr th:if="${resultList.size()} eq 0" >
+                <td class="has-text-centered" colspan="5">暂无数据</td>
+            </tr>
+            </tbody>
+        </table>
+
+    <!--
+      <nav class="pagination" role="navigation" aria-label="pagination">
+          <a class="pagination-previous">上一页</a>
+          <a class="pagination-next">下一页</a>
+          <ul class="pagination-list">
+              <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+              <li><span class="pagination-ellipsis">&hellip;</span></li>
+              <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+              <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
+              <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+              <li><span class="pagination-ellipsis">&hellip;</span></li>
+              <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+          </ul>
+      </nav>
+    -->
+    </div>
+
+    <script>
+        //获取query参数
+        function getQuery(name) {
+            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            let r = window.location.search.substr(1).match(reg);
+            if(r != null) return decodeURIComponent(r[2]);
+            return '';
+        }
+        $('#gradeSelect').val(getQuery('gradeCode'));
+        $('#subjectSelect').val(getQuery('subjectCode'));
+        $('#lessonStartDateSelect').val(getQuery('lessonStartDate'));
+        $('#lessonEndDateSelect').val(getQuery('lessonEndDate'));
+
+             // 查询按钮点击事件
+             $('#queryBtn').click(function () {
+                 let lessonStartDate = $('#lessonStartDateSelect').val();
+                 let lessonEndDate = $('#lessonEndDateSelect').val();
+                 if(new Date(lessonStartDate).getTime()>new Date(lessonEndDate).getTime()){
+                     alert('开始时间不能晚于结束时间！');
+                     return;
+                 }
+                 window.location.href = `/subject/findSubjectLesson?gradeCode=${$('#gradeSelect').val()}&subjectCode=${$('#subjectSelect').val()}&lessonStartDate=${lessonStartDate==null?'':lessonStartDate}&lessonEndDate=${lessonEndDate==null?'':lessonEndDate}`
+             })
+
+           //详情跳转
+           $('.detailBtn').click(function () {
+               let subjectCode = $(this).parent().siblings('.subjectCode').text();
+               window.open(`/lesson/findLessonBySubjectCode?subjectCode=${subjectCode}`);
+           })
+
+        //重置时间
+        $('#resetStart').click(function () {
+            $('#lessonStartDateSelect').val('');
+        })
+        $('#resetEnd').click(function () {
+            $('#lessonEndDateSelect').val('');
+        })
+
+    </script>
+
+</body>
+</html>

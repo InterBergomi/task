@@ -1,0 +1,58 @@
+server:
+  port: 22022
+  servlet:
+    context-path: /
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://127.0.0.1:3306/tencent_education?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+    username: root
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    open-in-view: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: LEGACYHTML5
+    servlet:
+      content-type: text/html
+    encoding: UTF-8
+    cache: false
+
+  resources:
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /**
+    static-locations: classpath:/static/,classpath:/view/,classpath:/META-INF/
+
+  mvc:
+    static-path-pattern: /**
+
+#mybatis:
+#  configuration:
+#    map-underscore-to-camel-case: true
+#  mapper-locations: classpath*:mapper/*Mapper.xml
+#  type-aliases-package: com.example.**.mapper
+
+#mybatis-plus:
+#  mapper-locations: classpath*:mapper/*Mapper.xml
+#  type-aliases-package: com.example.**.mapper
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    map-underscore-to-camel-case: true
+#    cache-enabled: false
+
+logging:
+  level:
+    com.example.demo.**.mapper: debug

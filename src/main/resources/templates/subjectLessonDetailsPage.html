@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bulma/0.8.2/css/bulma.min.css" rel="stylesheet">
+    <style>
+        body{
+            padding: 20px;
+        }
+        .table{
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="table">
+        <h2 class="title is-2 has-text-centered">课程详情</h2>
+        <table class="table is-bordered">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>课程id</th>
+                <th>科目名称</th>
+                <th>年级名称</th>
+                <th>教师名称</th>
+                <th>开课区间</th>
+                <th>开课时间开始</th>
+                <th>开课时间结束</th>
+                <th>课程原价</th>
+                <th>课程实价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="lessonVo : ${lessonDetailsList}">
+                <td th:text="${lessonVo.sequence}"></td>
+                <td th:text="${lessonVo.lessonId}"></td>
+                <td th:text="${lessonVo.subjectName}"></td>
+                <td th:text="${lessonVo.gradeName}"></td>
+                <td th:text="${lessonVo.teacherName}"></td>
+                <td th:text="${lessonVo.lessonDuration}"></td>
+                <td th:text="${lessonVo.lessonStartDate}"></td>
+                <td th:text="${lessonVo.lessonEndDate}"></td>
+                <td th:text="${lessonVo.originalPrice}"></td>
+                <td th:text="${lessonVo.actualPrice}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!--
+          <nav class="pagination" role="navigation" aria-label="pagination">
+              <a class="pagination-previous">上一页</a>
+              <a class="pagination-next">下一页</a>
+              <ul class="pagination-list">
+                  <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+                  <li><span class="pagination-ellipsis">&hellip;</span></li>
+                  <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+                  <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a></li>
+                  <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+                  <li><span class="pagination-ellipsis">&hellip;</span></li>
+                  <li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+              </ul>
+          </nav>
+        -->
+    </div>
+</body>
+</html>
